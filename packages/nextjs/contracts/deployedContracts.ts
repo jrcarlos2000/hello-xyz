@@ -5,134 +5,61 @@
 
 const deployedContracts = {
   devnet: {
-    YourContract: {
+    Counter: {
       address:
-        "0x2a9ad69defd28da125f16b1149f305fc7d3f05f2f19afb234c677bb24e7c24c",
+        "0x5b12948ec9fa34f518766ccbd29aa7142844fdb0bb01c0f197413952f08b0e8",
       abi: [
         {
           type: "impl",
-          name: "YourContractImpl",
-          interface_name: "contracts::YourContract::IYourContract",
-        },
-        {
-          type: "struct",
-          name: "core::byte_array::ByteArray",
-          members: [
-            {
-              name: "data",
-              type: "core::array::Array::<core::bytes_31::bytes31>",
-            },
-            {
-              name: "pending_word",
-              type: "core::felt252",
-            },
-            {
-              name: "pending_word_len",
-              type: "core::integer::u32",
-            },
-          ],
-        },
-        {
-          type: "struct",
-          name: "core::integer::u256",
-          members: [
-            {
-              name: "low",
-              type: "core::integer::u128",
-            },
-            {
-              name: "high",
-              type: "core::integer::u128",
-            },
-          ],
-        },
-        {
-          type: "enum",
-          name: "core::option::Option::<core::integer::u256>",
-          variants: [
-            {
-              name: "Some",
-              type: "core::integer::u256",
-            },
-            {
-              name: "None",
-              type: "()",
-            },
-          ],
-        },
-        {
-          type: "enum",
-          name: "core::bool",
-          variants: [
-            {
-              name: "False",
-              type: "()",
-            },
-            {
-              name: "True",
-              type: "()",
-            },
-          ],
+          name: "CounterImpl",
+          interface_name: "contracts::counter::ICounter",
         },
         {
           type: "interface",
-          name: "contracts::YourContract::IYourContract",
+          name: "contracts::counter::ICounter",
           items: [
             {
               type: "function",
-              name: "greeting",
+              name: "get_counter",
               inputs: [],
               outputs: [
                 {
-                  type: "core::byte_array::ByteArray",
+                  type: "core::integer::u32",
                 },
               ],
               state_mutability: "view",
             },
             {
               type: "function",
-              name: "set_greeting",
-              inputs: [
-                {
-                  name: "new_greeting",
-                  type: "core::byte_array::ByteArray",
-                },
-                {
-                  name: "amount_eth",
-                  type: "core::option::Option::<core::integer::u256>",
-                },
-              ],
-              outputs: [],
-              state_mutability: "external",
-            },
-            {
-              type: "function",
-              name: "withdraw",
+              name: "increase_counter",
               inputs: [],
               outputs: [],
               state_mutability: "external",
             },
             {
               type: "function",
-              name: "premium",
+              name: "decrease_counter",
               inputs: [],
-              outputs: [
-                {
-                  type: "core::bool",
-                },
-              ],
-              state_mutability: "view",
+              outputs: [],
+              state_mutability: "external",
+            },
+            {
+              type: "function",
+              name: "reset_counter",
+              inputs: [],
+              outputs: [],
+              state_mutability: "external",
             },
           ],
         },
         {
           type: "impl",
-          name: "OwnableImpl",
-          interface_name: "openzeppelin_access::ownable::interface::IOwnable",
+          name: "OwnableMixinImpl",
+          interface_name: "openzeppelin_access::ownable::interface::OwnableABI",
         },
         {
           type: "interface",
-          name: "openzeppelin_access::ownable::interface::IOwnable",
+          name: "openzeppelin_access::ownable::interface::OwnableABI",
           items: [
             {
               type: "function",
@@ -164,15 +91,53 @@ const deployedContracts = {
               outputs: [],
               state_mutability: "external",
             },
+            {
+              type: "function",
+              name: "transferOwnership",
+              inputs: [
+                {
+                  name: "newOwner",
+                  type: "core::starknet::contract_address::ContractAddress",
+                },
+              ],
+              outputs: [],
+              state_mutability: "external",
+            },
+            {
+              type: "function",
+              name: "renounceOwnership",
+              inputs: [],
+              outputs: [],
+              state_mutability: "external",
+            },
           ],
         },
         {
           type: "constructor",
           name: "constructor",
-          inputs: [
+          inputs: [],
+        },
+        {
+          type: "event",
+          name: "contracts::counter::Counter::Increased",
+          kind: "struct",
+          members: [
             {
-              name: "owner",
+              name: "account",
               type: "core::starknet::contract_address::ContractAddress",
+              kind: "data",
+            },
+          ],
+        },
+        {
+          type: "event",
+          name: "contracts::counter::Counter::Decreased",
+          kind: "struct",
+          members: [
+            {
+              name: "account",
+              type: "core::starknet::contract_address::ContractAddress",
+              kind: "data",
             },
           ],
         },
@@ -229,51 +194,29 @@ const deployedContracts = {
         },
         {
           type: "event",
-          name: "contracts::YourContract::YourContract::GreetingChanged",
-          kind: "struct",
-          members: [
-            {
-              name: "greeting_setter",
-              type: "core::starknet::contract_address::ContractAddress",
-              kind: "key",
-            },
-            {
-              name: "new_greeting",
-              type: "core::byte_array::ByteArray",
-              kind: "key",
-            },
-            {
-              name: "premium",
-              type: "core::bool",
-              kind: "data",
-            },
-            {
-              name: "value",
-              type: "core::option::Option::<core::integer::u256>",
-              kind: "data",
-            },
-          ],
-        },
-        {
-          type: "event",
-          name: "contracts::YourContract::YourContract::Event",
+          name: "contracts::counter::Counter::Event",
           kind: "enum",
           variants: [
+            {
+              name: "Increased",
+              type: "contracts::counter::Counter::Increased",
+              kind: "nested",
+            },
+            {
+              name: "Decreased",
+              type: "contracts::counter::Counter::Decreased",
+              kind: "nested",
+            },
             {
               name: "OwnableEvent",
               type: "openzeppelin_access::ownable::ownable::OwnableComponent::Event",
               kind: "flat",
             },
-            {
-              name: "GreetingChanged",
-              type: "contracts::YourContract::YourContract::GreetingChanged",
-              kind: "nested",
-            },
           ],
         },
       ],
       classHash:
-        "0x21654e7be8bbd096e09739022ff70a55b929e24a9dd84d02ea97de95c7d6cbe",
+        "0xf4845704d98ed3ab0cefe4e0e2bba0ad7517f4a9f86d2bbb2a624929c27da9",
     },
   },
 } as const;

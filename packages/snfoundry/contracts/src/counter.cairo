@@ -8,7 +8,7 @@ pub trait ICounter<TContractState> {
 
 
 #[starknet::contract]
-pub mod YourContract{
+pub mod Counter {
     use OwnableComponent::InternalTrait;
     use super::ICounter;
     use openzeppelin_access::ownable::OwnableComponent;
