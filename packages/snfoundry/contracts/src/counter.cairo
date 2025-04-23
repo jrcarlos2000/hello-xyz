@@ -10,10 +10,10 @@ pub trait ICounter<TContractState> {
 #[starknet::contract]
 pub mod Counter {
     use OwnableComponent::InternalTrait;
-    use super::ICounter;
     use openzeppelin_access::ownable::OwnableComponent;
+    use starknet::storage::{StoragePointerReadAccess, StoragePointerWriteAccess};
     use starknet::{ContractAddress, get_caller_address};
-    use starknet::storage::{StoragePointerWriteAccess, StoragePointerReadAccess};
+    use super::ICounter;
 
     component!(path: OwnableComponent, storage: ownable, event: OwnableEvent);
 
@@ -29,9 +29,9 @@ pub mod Counter {
     }
 
     #[constructor]
-    fn constructor(ref self: ContractState){
-        self.counter.write(0);
-        self.ownable.initializer(get_caller_address());
+    fn constructor(ref self: ContractState, init_value: u32, owner: ContractAddress) {
+        self.counter.write(init_value);
+        self.ownable.initializer(owner);
     }
 
     #[event]
@@ -40,17 +40,17 @@ pub mod Counter {
         Increased: Increased,
         Decreased: Decreased,
         #[flat]
-        OwnableEvent: OwnableComponent::Event
+        OwnableEvent: OwnableComponent::Event,
     }
 
     #[derive(Drop, starknet::Event)]
     pub struct Increased {
-        account: ContractAddress
+        pub account: ContractAddress,
     }
 
     #[derive(Drop, starknet::Event)]
     pub struct Decreased {
-        account: ContractAddress
+        pub account: ContractAddress,
     }
 
     pub mod Error {
@@ -67,21 +67,19 @@ pub mod Counter {
         fn increase_counter(ref self: ContractState) {
             let new_value = self.counter.read() + 1;
             self.counter.write(new_value);
-            self.emit(Increased {account: get_caller_address()}) 
+            self.emit(Increased { account: get_caller_address() })
         }
 
         fn decrease_counter(ref self: ContractState) {
             let old_value = self.counter.read();
             assert(old_value > 0, Error::EMPTY_COUNTER);
             self.counter.write(old_value - 1);
-            self.emit(Decreased {account: get_caller_address()}) 
+            self.emit(Decreased { account: get_caller_address() })
         }
 
         fn reset_counter(ref self: ContractState) {
             self.ownable.assert_only_owner();
             self.counter.write(0);
         }
-
     }
-
 }
