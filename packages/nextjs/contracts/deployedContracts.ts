@@ -7,7 +7,7 @@ const deployedContracts = {
   devnet: {
     Counter: {
       address:
-        "0x5b12948ec9fa34f518766ccbd29aa7142844fdb0bb01c0f197413952f08b0e8",
+        "0x43dc4caf334501a9a33f31c21c216d8c8f86b37921863bdb24c27c45c630a4",
       abi: [
         {
           type: "impl",
@@ -49,6 +49,17 @@ const deployedContracts = {
               inputs: [],
               outputs: [],
               state_mutability: "external",
+            },
+            {
+              type: "function",
+              name: "get_win_number",
+              inputs: [],
+              outputs: [
+                {
+                  type: "core::integer::u32",
+                },
+              ],
+              state_mutability: "view",
             },
           ],
         },
@@ -115,7 +126,12 @@ const deployedContracts = {
         {
           type: "constructor",
           name: "constructor",
-          inputs: [],
+          inputs: [
+            {
+              name: "owner",
+              type: "core::starknet::contract_address::ContractAddress",
+            },
+          ],
         },
         {
           type: "event",
@@ -216,7 +232,7 @@ const deployedContracts = {
         },
       ],
       classHash:
-        "0xf4845704d98ed3ab0cefe4e0e2bba0ad7517f4a9f86d2bbb2a624929c27da9",
+        "0x5661ed507bf20afedc42cb0c4370ebc91ef6b7ef6ba9138f59e1d23e6bbf18a",
     },
   },
 } as const;
