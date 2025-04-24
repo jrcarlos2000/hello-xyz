@@ -2,11 +2,20 @@
 
 import { ConnectedAddress } from "~~/components/ConnectedAddress";
 import { useState } from "react";
+// import { useScaffoldReadContract } from "~~/hooks/scaffold-stark/useScaffoldReadContract";
+// import { useScaffoldWriteContract } from "~~/hooks/scaffold-stark/useScaffoldWriteContract";
+// import { useScaffoldMultiWriteContract } from "~~/hooks/scaffold-stark/useScaffoldMultiWriteContract";
+// import { useScaffoldEventHistory } from "~~/hooks/scaffold-stark/useScaffoldEventHistory";
+// import { useBlockNumber } from "@starknet-react/core";
+// import { useDeployedContractInfo } from "~~/hooks/scaffold-stark/useDeployedContractInfo";
+// import { useTargetNetwork } from "~~/hooks/scaffold-stark/useTargetNetwork";
 
 const Home = () => {
   const [counterValue] = useState<number>(0);
   const [winNumber] = useState<number>(10);
-
+  const [inputAmount, setInputAmount] = useState<string>("");
+  const [contractBalance] = useState<string>("0.000000");
+  
   return (
     <div className="flex items-center flex-col flex-grow pt-10">
       <div className="px-5 w-full max-w-6xl">
@@ -33,31 +42,59 @@ const Home = () => {
                 {counterValue.toString()}
                 <span className="text-xl opacity-60 ml-2">/ {winNumber.toString()}</span>
               </p>
-              <p className="text-center text-lg mb-4">
-                Reach {winNumber.toString()} to win all STRK in the contract!
-              </p>
+              
+              <div className="bg-base-300 p-4 rounded-lg my-4">
+                <p className="text-xl font-medium text-center">
+                  Prize Pool: {contractBalance} STRK
+                </p>
+              </div>
+              
+              <div className="form-control mb-4">
+                <label className="label">
+                  <span className="label-text text-lg font-medium">
+                    STRK Amount (Optional)
+                  </span>
+                </label>
+                <div className="flex bg-base-300 p-2 rounded-lg">
+                  <input
+                    type="number"
+                    className="input input-ghost focus:outline-none h-[2.5rem] min-h-[2.5rem] px-4 w-full"
+                    value={inputAmount}
+                    onChange={(e) => setInputAmount(e.target.value)}
+                    placeholder="Enter amount to send with increment"
+                    step="0.01"
+                    min="0"
+                  />
+                </div>
+              </div>
+              
               <div className="flex justify-center gap-4 mt-4">
                 <button
                   className="btn btn-primary btn-lg"
-                  onClick={() => console.log("Increment counter")}
+                  onClick={() => console.log("Increment clicked")}
                 >
-                  Increment
-                </button>
-                <button
-                  className="btn btn-secondary btn-lg"
-                  onClick={() => console.log("Decrement counter")}
-                >
-                  Decrement
+                  {inputAmount && parseFloat(inputAmount) > 0
+                    ? `Increment + Send ${inputAmount} STRK`
+                    : "Increment"}
                 </button>
                 <button
                   className="btn btn-outline btn-lg"
-                  onClick={() => console.log("Reset counter")}
+                  onClick={() => console.log("Reset clicked")}
                 >
-                  Reset
+                  Reset (costs {contractBalance} STRK)
                 </button>
               </div>
             </div>
           </div>
+          
+          {/* <div className="bg-base-100 p-8 rounded-3xl border border-gradient shadow-lg">
+            <h2 className="text-2xl font-bold mb-6 text-secondary">
+              Activity History
+            </h2>
+            <div className="space-y-4">
+              <p className="text-center text-lg opacity-70">No activity yet</p>
+            </div>
+          </div> */}
         </div>
       </div>
     </div>
