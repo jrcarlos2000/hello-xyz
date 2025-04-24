@@ -27,7 +27,7 @@ View -> Command Palette -> Dev Containers: Rebuild and Reopen in Container
 To build the project
 
 ```
-yarn build
+yarn compile
 ```
 
 To run the tests
